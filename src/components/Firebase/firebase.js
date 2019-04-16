@@ -1,6 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
+import 'firebase/firestore';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -17,19 +17,20 @@ class Firebase {
 
     /* Helper */
 
-    this.serverValue = app.database.ServerValue;
+    this.fieldValue = app.firestore.FieldValue;
     this.emailAuthProvider = app.auth.EmailAuthProvider;
 
     /* Firebase APIs */
 
     this.auth = app.auth();
-    this.db = app.database();
+    this.db = app.firestore();
 
     /* Social Sign In Method Provider */
 
     this.googleProvider = new app.auth.GoogleAuthProvider();
     this.facebookProvider = new app.auth.FacebookAuthProvider();
     this.twitterProvider = new app.auth.TwitterAuthProvider();
+    this.githubProvider = new app.auth.GithubAuthProvider();
   }
 
   // *** Auth API ***
@@ -49,6 +50,9 @@ class Firebase {
   doSignInWithTwitter = () =>
     this.auth.signInWithPopup(this.twitterProvider);
 
+  doSignInWithGithub = () =>
+    this.auth.signInWithPopup(this.githubProvider);
+
   doSignOut = () => this.auth.signOut();
 
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
@@ -67,9 +71,9 @@ class Firebase {
     this.auth.onAuthStateChanged(authUser => {
       if (authUser) {
         this.user(authUser.uid)
-          .once('value')
+          .get()
           .then(snapshot => {
-            const dbUser = snapshot.val();
+            const dbUser = snapshot.data();
 
             // default empty roles
             if (!dbUser.roles) {
@@ -94,15 +98,15 @@ class Firebase {
 
   // *** User API ***
 
-  user = uid => this.db.ref(`users/${uid}`);
+  user = uid => this.db.doc(`users/${uid}`);
 
-  users = () => this.db.ref('users');
+  users = () => this.db.collection('users');
 
   // *** Message API ***
 
-  message = uid => this.db.ref(`messages/${uid}`);
+  message = uid => this.db.doc(`messages/${uid}`);
 
-  messages = () => this.db.ref('messages');
+  messages = () => this.db.collection('messages');
 }
 
 export default Firebase;

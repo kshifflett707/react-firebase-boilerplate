@@ -36,6 +36,10 @@ const SIGN_IN_METHODS = [
     id: 'twitter.com',
     provider: 'twitterProvider',
   },
+  {
+    id: 'github.com',
+    provider: 'githubProvider',
+  },
 ];
 
 const AccountPage = () => (
@@ -191,6 +195,8 @@ const SocialLoginToggle = ({
           ? 'facebook'
           : signInMethod.id === 'twitter.com'
           ? 'twitter'
+          : signInMethod.id === 'github.com'
+          ? 'black'
           : ''
       }
       type="button"
@@ -208,6 +214,8 @@ const SocialLoginToggle = ({
           ? 'facebook'
           : signInMethod.id === 'twitter.com'
           ? 'twitter'
+          : signInMethod.id === 'github.com'
+          ? 'black'
           : ''
       }
       type="button"

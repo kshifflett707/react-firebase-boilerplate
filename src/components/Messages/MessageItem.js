@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Feed, Icon, Form, Button } from 'semantic-ui-react';
 
 export const TimeAgo = ({ time }) => (
-  <time>{distanceInWordsToNow(time)} ago</time>
+  <time>{distanceInWordsToNow(new Date(time))} ago</time>
 );
 
 class MessageItem extends Component {
@@ -37,7 +37,6 @@ class MessageItem extends Component {
   render() {
     const { authUser, message, onRemoveMessage } = this.props;
     const { editMode, editText } = this.state;
-
     return (
       <Feed.Event>
         <Feed.Content>
@@ -46,7 +45,12 @@ class MessageItem extends Component {
               {message.userId}
             </Feed.User>
             <Feed.Date>
-              <TimeAgo time={message.createdAt} />
+              <TimeAgo
+                time={
+                  message.createdAt &&
+                  message.createdAt.seconds * 1000
+                }
+              />
             </Feed.Date>
           </Feed.Summary>
           <Feed.Extra>

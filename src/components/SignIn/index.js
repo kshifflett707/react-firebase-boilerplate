@@ -27,6 +27,7 @@ const SignInPage = () => (
       <SignInGoogle />
       <SignInFacebook />
       <SignInTwitter />
+      <SignInGithub />
       <SignUpLink />
     </Grid.Column>
   </Grid>
@@ -131,11 +132,14 @@ class SignInGoogleBase extends Component {
       .doSignInWithGoogle()
       .then(socialAuthUser => {
         // Create a user in your Firebase Realtime Database too
-        return this.props.firebase.user(socialAuthUser.user.uid).set({
-          username: socialAuthUser.user.displayName,
-          email: socialAuthUser.user.email,
-          roles: {},
-        });
+        return this.props.firebase.user(socialAuthUser.user.uid).set(
+          {
+            username: socialAuthUser.user.displayName,
+            email: socialAuthUser.user.email,
+            roles: {},
+          },
+          { merge: true },
+        );
       })
       .then(() => {
         this.setState({ error: null });
@@ -183,11 +187,14 @@ class SignInFacebookBase extends Component {
       .doSignInWithFacebook()
       .then(socialAuthUser => {
         // Create a user in your Firebase Realtime Database too
-        return this.props.firebase.user(socialAuthUser.user.uid).set({
-          username: socialAuthUser.additionalUserInfo.profile.name,
-          email: socialAuthUser.additionalUserInfo.profile.email,
-          roles: {},
-        });
+        return this.props.firebase.user(socialAuthUser.user.uid).set(
+          {
+            username: socialAuthUser.additionalUserInfo.profile.name,
+            email: socialAuthUser.additionalUserInfo.profile.email,
+            roles: {},
+          },
+          { merge: true },
+        );
       })
       .then(() => {
         this.setState({ error: null });
@@ -235,11 +242,14 @@ class SignInTwitterBase extends Component {
       .doSignInWithTwitter()
       .then(socialAuthUser => {
         // Create a user in your Firebase Realtime Database too
-        return this.props.firebase.user(socialAuthUser.user.uid).set({
-          username: socialAuthUser.additionalUserInfo.profile.name,
-          email: socialAuthUser.additionalUserInfo.profile.email,
-          roles: {},
-        });
+        return this.props.firebase.user(socialAuthUser.user.uid).set(
+          {
+            username: socialAuthUser.additionalUserInfo.profile.name,
+            email: socialAuthUser.additionalUserInfo.profile.email,
+            roles: {},
+          },
+          { merge: true },
+        );
       })
       .then(() => {
         this.setState({ error: null });
@@ -275,6 +285,62 @@ class SignInTwitterBase extends Component {
   }
 }
 
+class SignInGithubBase extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { error: null };
+  }
+
+  onSubmit = event => {
+    this.props.firebase
+      .doSignInWithGithub()
+      .then(socialAuthUser => {
+        console.log(socialAuthUser);
+        // Create a user in your Firebase Realtime Database too
+        return this.props.firebase.user(socialAuthUser.user.uid).set(
+          {
+            username: socialAuthUser.additionalUserInfo.username,
+            email: socialAuthUser.user.email,
+            roles: {},
+          },
+          { merge: true },
+        );
+      })
+      .then(() => {
+        this.setState({ error: null });
+        this.props.history.push(ROUTES.HOME);
+      })
+      .catch(error => {
+        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+          error.message = ERROR_MSG_ACCOUNT_EXISTS;
+        }
+
+        this.setState({ error });
+      });
+
+    event.preventDefault();
+  };
+
+  render() {
+    const { error } = this.state;
+
+    return (
+      <form onSubmit={this.onSubmit} className="inline">
+        <Button color="black" type="submit">
+          <Icon name="github" /> Github
+        </Button>
+
+        {error && (
+          <Message negative>
+            <p>{error.message}</p>
+          </Message>
+        )}
+      </form>
+    );
+  }
+}
+
 const SignInForm = compose(
   withRouter,
   withFirebase,
@@ -295,6 +361,17 @@ const SignInTwitter = compose(
   withFirebase,
 )(SignInTwitterBase);
 
+const SignInGithub = compose(
+  withRouter,
+  withFirebase,
+)(SignInGithubBase);
+
 export default SignInPage;
 
-export { SignInForm, SignInGoogle, SignInFacebook, SignInTwitter };
+export {
+  SignInForm,
+  SignInGoogle,
+  SignInFacebook,
+  SignInTwitter,
+  SignInGithub,
+};
