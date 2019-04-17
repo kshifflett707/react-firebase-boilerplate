@@ -84,7 +84,7 @@ class Messages extends Component {
   };
 
   onRemoveMessage = uid => {
-    this.props.firebase.message(uid).remove();
+    this.props.firebase.message(uid).delete();
   };
 
   onNextPage = () => {
