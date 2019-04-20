@@ -107,6 +107,12 @@ class Firebase {
   message = uid => this.db.doc(`messages/${uid}`);
 
   messages = () => this.db.collection('messages');
+
+  // *** Photo API ***
+
+  photo = uid => this.db.doc(`photos/${uid}`);
+
+  photos = () => this.db.collection('photos');
 }
 
 export default Firebase;

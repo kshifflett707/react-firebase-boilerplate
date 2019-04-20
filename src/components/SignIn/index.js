@@ -161,7 +161,11 @@ class SignInGoogleBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit} className="inline">
-        <Button color="google plus" type="submit">
+        <Button
+          color="google plus"
+          type="submit"
+          style={{ width: '100%', 'margin-bottom': '5px' }}
+        >
           <Icon name="google" /> Google
         </Button>
 
@@ -216,7 +220,11 @@ class SignInFacebookBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit} className="inline">
-        <Button color="facebook" type="submit">
+        <Button
+          color="facebook"
+          type="submit"
+          style={{ width: '100%', 'margin-bottom': '5px' }}
+        >
           <Icon name="facebook" /> Facebook
         </Button>
 
@@ -271,7 +279,11 @@ class SignInTwitterBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit} className="inline">
-        <Button color="twitter" type="submit">
+        <Button
+          color="twitter"
+          type="submit"
+          style={{ width: '100%', 'margin-bottom': '5px' }}
+        >
           <Icon name="twitter" /> Twitter
         </Button>
 
@@ -327,7 +339,11 @@ class SignInGithubBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit} className="inline">
-        <Button color="black" type="submit">
+        <Button
+          color="black"
+          type="submit"
+          style={{ width: '100%', 'margin-bottom': '5px' }}
+        >
           <Icon name="github" /> Github
         </Button>
 
