@@ -25,37 +25,13 @@ class Panel extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  async joinGame() {
-    const duels = this.props.firebase.duels();
-    const openDuels = await duels.where('started', '==', false).get();
-    if (openDuels.docs[0]) {
-      const duelRef = duels.doc(`${openDuels.docs[0].id}`);
-      duelRef.set(
-        {
-          challenger: 'kyle',
-        },
-        { merge: true },
-      );
-      this.props.setRoomId(openDuels.docs[0].id);
-      duels.doc(openDuels.docs[0].id).onSnapshot(async snap => {
-        let code = await snap.data().challenge;
-        console.log(code);
-        this.props.setSolution(code);
-      });
-    } else {
-      duels
-        .add({
-          initiator: 'kyle',
-        })
-        .then(ref => {
-          this.props.setRoomId(ref.id);
-          duels.doc(ref.id).onSnapshot(async snap => {
-            let code = await snap.data().challenge;
-            console.log(code);
-            this.props.setSolution(code);
-          });
-        });
-    }
+  joinGame() {
+    this.props.firebase.duel('707').update({
+      code: 'hello world',
+    });
+    this.props.firebase.duel('707').on('value', snap => {
+      this.props.setSolution(snap.val().code);
+    });
   }
 
   leaveGame() {

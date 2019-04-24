@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/database';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -24,6 +25,7 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.firestore();
+    this.database = app.database();
 
     /* Social Sign In Method Provider */
 
@@ -116,7 +118,9 @@ class Firebase {
 
   // *** Duel API ***
 
-  duels = () => this.db.collection(`duels`);
+  duel = uid => this.database.ref(`duels/${uid}`);
+
+  duels = () => this.database.ref(`duels`);
 }
 
 export default Firebase;

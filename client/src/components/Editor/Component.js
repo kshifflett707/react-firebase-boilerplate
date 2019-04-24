@@ -15,15 +15,9 @@ const Editor = props => {
         mode="javascript"
         theme={props.dark ? 'merbivore' : 'sqlserver'}
         onChange={e => {
-          props.firebase
-            .duels()
-            .doc(props.roomId)
-            .set(
-              {
-                challenge: e,
-              },
-              { merge: true },
-            );
+          props.firebase.duel('707').set({
+            code: e,
+          });
         }}
         value={props.solution}
         name="UNIQUE_ID_OF_DIV"
